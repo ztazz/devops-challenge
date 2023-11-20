@@ -27,6 +27,14 @@ class MyHandler(SimpleHTTPRequestHandler):
                     "code_name": { "S": code_name }
                 }
             )
+            
+            # Check if the item was found
+            #if 'Item' in response:
+            #    secret_code = response['Item']['secret_code']
+            #    response="The secret code for " + code_name + " is: " + secret_code
+            #else:
+            #    response="No item found with code_name " + code_name + " in table " table_name
+            
             print(response)
             return str(response)
 
