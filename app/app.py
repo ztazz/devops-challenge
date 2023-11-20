@@ -11,7 +11,7 @@ table_name = os.environ['TABLE_NAME']
 code_name = os.environ['CODE_NAME']
 
 host = ''
-port = 8000
+port = 5000
 
 class MyHandler(SimpleHTTPRequestHandler):
 
