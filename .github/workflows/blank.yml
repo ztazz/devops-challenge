@@ -46,4 +46,7 @@ jobs:
           CODE_NAME: ${{ secrets.CODE_NAME }}
         run: |
           docker run -d --env AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
-          -p 8000:8000 devops-challenge:latest
+                        --env AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+                        --env REGION=$REGION --env TABLE_NAME=$TABLE_NAME \
+                        --env CODE_NAME=$CODENAME \
+                        -p 8000:8000 devops-challenge:latest || { echo "docker run failed ; exit 1 ; }
