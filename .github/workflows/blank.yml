@@ -37,4 +37,13 @@ jobs:
           docker build . -t devops-challenge:latest --build-arg \
             container=https://hub.docker.com/ztazz/devops-challenge:latest --build-arg project=https://github.com/ztazz/devops-challenge
 
-     
+      - name: Test image
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          REGION: ${{ secrets.REGION }}
+          TABLE_NAME: ${{ secrets.TABLE_NAME }}
+          CODE_NAME: ${{ secrets.CODE_NAME }}
+        run: |
+          docker run -d --env AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+          -p 8000:8000 devops-challenge:latest
