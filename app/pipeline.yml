@@ -1,0 +1,56 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CICD
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "master" branch
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # Runs a single command using the runners shell
+      - name: Docker build
+        run: |
+          docker build . -t ztazz/devops-challenge:latest --build-arg \
+            container=https://hub.docker.com/ztazz/devops-challenge:latest --build-arg project=https://github.com/ztazz/devops-challenge
+
+      - name: Test image
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          REGION: ${{ secrets.REGION }}
+          TABLE_NAME: ${{ secrets.TABLE_NAME }}
+          CODE_NAME: ${{ secrets.CODE_NAME }}
+        run: |
+          docker run --name devops-challenge -d --env AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID --env AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+          --env REGION=$REGION --env TABLE_NAME=$TABLE_NAME --env CODE_NAME=$CODE_NAME -p 8000:8000 ztazz/devops-challenge:latest
+          sleep 3
+          docker ps
+          docker exec devops-challenge curl localhost:8000/health | grep healthy || exit 1
+          
+      - name: Push image
+        env:
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+          docker push ztazz/devops-challenge:latest
+        
+          
