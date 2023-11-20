@@ -4,11 +4,11 @@ import boto3
 import os
 #from boto3.dynamodb.conditions import Key
 
-aws_access_key_id = os.environ['aws_access_key_id']
-aws_secret_access_key = os.environ['aws_secret_access_key']
-region = os.environ['region']
-table_name = os.environ['table_name']
-code_name = os.environ['code_name']
+aws_access_key_id = os.environ['AWS_ACCESS_KEY_ID']
+aws_secret_access_key = os.environ['AWS_SECRET_ACCESS_KEY']
+region = os.environ['REGION']
+table_name = os.environ['TABLE_NAME']
+code_name = os.environ['CODE_NAME']
 
 host = ''
 port = 8000
