@@ -4,12 +4,11 @@ import boto3
 import os
 #from boto3.dynamodb.conditions import Key
 
-with open('aws_creds.txt', 'r') as f:
-    aws_access_key_id = f.readline().strip()
-    aws_secret_access_key = f.readline().strip()
-    region = f.readline().strip()
-    table_name = f.readline().strip()
-    code_name = f.readline().strip()
+aws_access_key_id = os.environ['aws_access_key_id']
+aws_secret_access_key = os.environ['aws_secret_access_key']
+region = os.environ['region']
+table_name = os.environ['table_name']
+code_name = os.environ['code_name']
 
 host = ''
 port = 8000
