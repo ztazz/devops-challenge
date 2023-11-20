@@ -27,12 +27,6 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Docker build
-        #env:
-        #  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        #  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        #  region: ${{ secrets.region }}
-        #  table_name: ${{ secrets.table_name }}
-        #  code_name: ${{ secrets.code_name }}
         run: |
           docker build . -t devops-challenge:latest --build-arg \
             container=https://hub.docker.com/ztazz/devops-challenge:latest --build-arg project=https://github.com/ztazz/devops-challenge
@@ -45,7 +39,9 @@ jobs:
           TABLE_NAME: ${{ secrets.TABLE_NAME }}
           CODE_NAME: ${{ secrets.CODE_NAME }}
         run: |
-          docker run -it --env AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID --env AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY --env REGION=$REGION \
+          docker run --name devops-challenge -it --env AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID --env AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY --env REGION=$REGION \
           --env TABLE_NAME=$TABLE_NAME --env CODE_NAME=$CODE_NAME -p 8000:8000 devops-challenge:latest
-          docker ps 
-          curl localhost:8000/health
+          sleep 5
+          docker ps
+          docker logs devops-challenge
+          docker exec devops-challenge curl localhost:8000/health
