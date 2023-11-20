@@ -39,8 +39,8 @@ jobs:
           TABLE_NAME: ${{ secrets.TABLE_NAME }}
           CODE_NAME: ${{ secrets.CODE_NAME }}
         run: |
-          docker run --name devops-challenge -it --env AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID --env AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY --env REGION=$REGION --env TABLE_NAME=$TABLE_NAME --env CODE_NAME=$CODE_NAME -p 8000:8000 devops-challenge:latest
+          docker run --name devops-challenge -d --env AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID --env AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY --env REGION=$REGION --env TABLE_NAME=$TABLE_NAME --env CODE_NAME=$CODE_NAME -p 8000:8000 devops-challenge:latest
           sleep 5
           docker ps
-          #docker logs devops-challenge
-          #docker exec devops-challenge curl localhost:8000/health
+          docker logs devops-challenge
+          docker exec devops-challenge curl localhost:8000/health
