@@ -28,7 +28,7 @@ jobs:
       # Runs a single command using the runners shell
       - name: Docker build
         run: |
-          docker build . -t devops-challenge:latest --build-arg \
+          docker build . -t ztazz/devops-challenge:latest --build-arg \
             container=https://hub.docker.com/ztazz/devops-challenge:latest --build-arg project=https://github.com/ztazz/devops-challenge
 
       - name: Test image
@@ -39,7 +39,17 @@ jobs:
           TABLE_NAME: ${{ secrets.TABLE_NAME }}
           CODE_NAME: ${{ secrets.CODE_NAME }}
         run: |
-          docker run --name devops-challenge -d --env AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID --env AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY --env REGION=$REGION --env TABLE_NAME=$TABLE_NAME --env CODE_NAME=$CODE_NAME -p 8000:8000 devops-challenge:latest
+          docker run --name devops-challenge -d --env AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID --env AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY --env REGION=$REGION --env TABLE_NAME=$TABLE_NAME --env CODE_NAME=$CODE_NAME -p 8000:8000 ztazz/devops-challenge:latest
           sleep 3
           docker ps
           docker exec devops-challenge curl localhost:8000/health | grep healthy || exit 1
+          
+      - name: Push image
+        env:
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+          docker push ztazz/devops-challenge:latest
+        
+          
