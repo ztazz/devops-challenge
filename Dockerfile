@@ -2,7 +2,7 @@ FROM python:3.9-alpine3.17
 
 # install bash
 RUN apk update \
-    && apk add bash
+    && apk add bash curl
 
 #create/change working directory
 WORKDIR /home/app
